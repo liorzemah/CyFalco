@@ -2,9 +2,11 @@
 # LuaJIT
 #
 option(USE_BUNDLED_LUAJIT "Enable building of the bundled LuaJIT" ${USE_BUNDLED_DEPS})
+set(LUAJIT_INCLUDE "/home/LuaJIT/src")
 
 if(LUAJIT_INCLUDE)
 	# we already have luajit
+	message(STATUS "Using existing luajit: ${LUAJIT_INCLUDE}")
 elseif(NOT USE_BUNDLED_LUAJIT)
 	find_path(LUAJIT_INCLUDE luajit.h PATH_SUFFIXES luajit-2.0 luajit-2.1 luajit)
 	find_library(LUAJIT_LIB NAMES luajit luajit-5.1)
