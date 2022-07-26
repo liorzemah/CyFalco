@@ -197,7 +197,7 @@ set(SINSP_LIBRARIES
 add_dependencies(sinsp valijson)
 
 if(WITH_CHISEL AND USE_BUNDLED_LUAJIT)
-	add_dependencies(sinsp luajit)
+	#add_dependencies(sinsp luajit)
 endif()
 
 if(NOT WIN32)
