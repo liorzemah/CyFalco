@@ -9,17 +9,19 @@ then
 else
     echo "Cloning LuaJIT" 
     git clone https://github.com/LuaJIT/LuaJIT.git
+	cd LuaJIT
+	make
+	make install
 fi 
 
+cd /home
 
 if [ -d "/home/falcolibs" ] 
 then
     echo "/home/falcolibs directory already exists." 
 else
     echo "Cloning Falcolibs directory" 
-    wget https://github.com/falcosecurity/libs/archive/refs/tags/0.8.0.tar.gz
-    tar -xf 0.8.0.tar.gz
-    mv libs-0.8.0 falcolibs
+	git clone https://github.com/liorzemah/Makefile-for-scap_open-test.git falcolibs
 fi
 
 cd falcolibs || exit 1
@@ -32,4 +34,3 @@ cd build
 
 cmake -DUSE_BUNDLED_DEPS=true -DMINIMAL_BUILD=true -DCREATE_TEST_TARGETS=OFF -DWITH_CHISEL=true ../
 make sinsp
-echo "make sinsp finished"
