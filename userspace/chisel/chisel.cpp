@@ -1624,6 +1624,77 @@ bool sinsp_chisel::run(sinsp_evt* evt)
 #endif
 }
 
+std::string sinsp_chisel::run_and_return_json(sinsp_evt* evt)
+{
+#ifdef HAS_LUA_CHISELS
+	string line;
+
+	ASSERT(m_ls);
+
+	//
+	// Make the event available to the API
+	//
+	lua_pushlightuserdata(m_ls, evt);
+	lua_setglobal(m_ls, "sievt");
+
+	//
+	// If there is a timeout callback, see if it's time to call it
+	//
+	do_timeout(evt);
+
+	//
+	// If there is a filter, run it
+	//
+	if(m_lua_cinfo->m_filter != NULL)
+	{
+		if(!m_lua_cinfo->m_filter->run(evt))
+		{
+			return {};
+		}
+	}
+
+	//
+	// If the script has the on_event callback, call it
+	//
+	if(m_lua_has_handle_evt)
+	{
+		lua_getglobal(m_ls, "on_event");
+
+		if(lua_pcall(m_ls, 0, 2, 0) != 0) // maybe if failed try to run lua_pcall(m_ls, 0, 1, 0) for backward compatibility
+		{
+			throw sinsp_exception(m_filename + " chisel error: " + lua_tostring(m_ls, -1));
+		}
+
+		m_last_on_event_res = lua_toboolean(m_ls, -1);
+		lua_pop(m_ls, 1);
+		std::string eventAsJson;
+		if (!lua_isstring(m_ls, -1))
+		{
+			throw std::invalid_argument("Eps expected to receive string value from on_event, check if your chisels are up to date");
+		}
+		else
+		{
+			eventAsJson =  lua_tostring(m_ls, -1);
+			lua_pop(m_ls, 1);
+		}
+
+		if(m_lua_cinfo->m_end_capture == true)
+		{
+			throw chisel_capture_interrupt_exception();
+		}
+
+		if(m_last_on_event_res == false)
+		{
+			return {};
+		}
+
+		return eventAsJson;
+	}
+
+	return {};
+#endif
+}
+
 void sinsp_chisel::do_timeout(sinsp_evt* evt)
 {
 	if(m_lua_is_first_evt)

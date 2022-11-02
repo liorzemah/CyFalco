@@ -125,6 +125,7 @@ public:
 	void set_args(string args);
 	void set_args(vector<pair<string, string>> args);
 	bool run(sinsp_evt* evt);
+	std::string run_and_return_json(sinsp_evt* evt);
 	void do_timeout(sinsp_evt* evt);
 	void do_end_of_sample();
 	void on_init();
@@ -135,6 +136,12 @@ public:
 	{
 		return &m_lua_script_info;
 	}
+
+	bool last_event_status()
+	{
+		return m_last_on_event_res;
+	}
+
 
 private:
 	bool openfile(string filename, OUT ifstream* is);
@@ -164,6 +171,7 @@ private:
 	string m_new_chisel_to_exec;
 	int m_udp_socket;
 	struct sockaddr_in m_serveraddr;
+	bool m_last_on_event_res;
 
 	friend class lua_cbacks;
 };
