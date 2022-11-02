@@ -1641,7 +1641,7 @@ std::string sinsp_chisel::run_and_return_json(sinsp_evt* evt)
 	// If there is a timeout callback, see if it's time to call it
 	//
 	do_timeout(evt);
-
+	m_last_on_event_res = 10;
 	//
 	// If there is a filter, run it
 	//
@@ -1649,6 +1649,7 @@ std::string sinsp_chisel::run_and_return_json(sinsp_evt* evt)
 	{
 		if(!m_lua_cinfo->m_filter->run(evt))
 		{
+			m_last_on_event_res = 7;
 			return {};
 		}
 	}
