@@ -21,7 +21,7 @@ then
     echo "/home/falcolibs directory already exists." 
 else
     echo "Cloning Falcolibs directory" 
-	git clone https://github.com/liorzemah/Makefile-for-scap_open-test.git falcolibs
+	git clone https://github.com/liorzemah/CyFalco.git falcolibs
 fi
 
 cd falcolibs || exit 1
