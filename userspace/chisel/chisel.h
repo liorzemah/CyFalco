@@ -137,7 +137,7 @@ public:
 		return &m_lua_script_info;
 	}
 
-	bool last_event_status()
+	int last_event_status()
 	{
 		return m_last_on_event_res;
 	}
@@ -171,7 +171,7 @@ private:
 	string m_new_chisel_to_exec;
 	int m_udp_socket;
 	struct sockaddr_in m_serveraddr;
-	bool m_last_on_event_res;
+	int m_last_on_event_res = -1;
 
 	friend class lua_cbacks;
 };
