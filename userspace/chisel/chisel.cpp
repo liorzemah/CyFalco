@@ -1586,28 +1586,28 @@ bool sinsp_chisel::run(sinsp_evt* evt)
 	//
 	// If the script has the on_event callback, call it
 	//
-//	if(m_lua_has_handle_evt)
-//	{
-//		lua_getglobal(m_ls, "on_event");
-//
-//		if(lua_pcall(m_ls, 0, 1, 0) != 0)
-//		{
-//			throw sinsp_exception(m_filename + " chisel error: " + lua_tostring(m_ls, -1));
-//		}
-//
-//		int oeres = lua_toboolean(m_ls, -1);
-//		lua_pop(m_ls, 1);
-//
-//		if(m_lua_cinfo->m_end_capture == true)
-//		{
-//			throw chisel_capture_interrupt_exception();
-//		}
-//
-//		if(oeres == false)
-//		{
-//			return false;
-//		}
-//	}
+	if(m_lua_has_handle_evt)
+	{
+		lua_getglobal(m_ls, "on_event");
+
+		if(lua_pcall(m_ls, 0, 1, 0) != 0)
+		{
+			throw sinsp_exception(m_filename + " chisel error: " + lua_tostring(m_ls, -1));
+		}
+
+		int oeres = lua_toboolean(m_ls, -1);
+		lua_pop(m_ls, 1);
+
+		if(m_lua_cinfo->m_end_capture == true)
+		{
+			throw chisel_capture_interrupt_exception();
+		}
+
+		if(oeres == false)
+		{
+			return false;
+		}
+	}
 
 	//
 	// If the script has a formatter, run it
@@ -1656,42 +1656,42 @@ std::string sinsp_chisel::run_and_return_json(sinsp_evt* evt)
 	//
 	// If the script has the on_event callback, call it
 	//
-//	if(m_lua_has_handle_evt)
-//	{
-//		lua_getglobal(m_ls, "on_event");
-//
-//		if(lua_pcall(m_ls, 0, 2, 0) != 0) // maybe if failed try to run lua_pcall(m_ls, 0, 1, 0) for backward compatibility
-//		{
-//			m_last_on_event_res = 2;
-//			throw sinsp_exception(m_filename + " chisel error: " + lua_tostring(m_ls, -1));
-//		}
-//
-//		m_last_on_event_res = lua_toboolean(m_ls, -1); // 1 if success else 0
-//		lua_pop(m_ls, 1);
-//		std::string eventAsJson;
-//		if (!lua_isstring(m_ls, -1))
-//		{
-//			m_last_on_event_res = 3;
-//			throw std::invalid_argument("Eps expected to receive string value from on_event, check if your chisels are up to date");
-//		}
-//		else
-//		{
-//			eventAsJson =  lua_tostring(m_ls, -1);
-//			lua_pop(m_ls, 1);
-//		}
-//
-//		if(m_lua_cinfo->m_end_capture == true)
-//		{
-//			throw chisel_capture_interrupt_exception();
-//		}
-//
-//		if(m_last_on_event_res == 0)
-//		{
-//			return {};
-//		}
-//
-//		return eventAsJson;
-//	}
+	if(m_lua_has_handle_evt)
+	{
+		lua_getglobal(m_ls, "on_event");
+
+		if(lua_pcall(m_ls, 0, 2, 0) != 0) // maybe if failed try to run lua_pcall(m_ls, 0, 1, 0) for backward compatibility
+		{
+			m_last_on_event_res = 2;
+			throw sinsp_exception(m_filename + " chisel error: " + lua_tostring(m_ls, -1));
+		}
+
+		m_last_on_event_res = lua_toboolean(m_ls, -1); // 1 if success else 0
+		lua_pop(m_ls, 1);
+		std::string eventAsJson;
+		if (!lua_isstring(m_ls, -1))
+		{
+			m_last_on_event_res = 3;
+			throw std::invalid_argument("Eps expected to receive string value from on_event, check if your chisels are up to date");
+		}
+		else
+		{
+			eventAsJson =  lua_tostring(m_ls, -1);
+			lua_pop(m_ls, 1);
+		}
+
+		if(m_lua_cinfo->m_end_capture == true)
+		{
+			throw chisel_capture_interrupt_exception();
+		}
+
+		if(m_last_on_event_res == 0)
+		{
+			return {};
+		}
+
+		return eventAsJson;
+	}
 
 	m_last_on_event_res = 6;
 	return {};
